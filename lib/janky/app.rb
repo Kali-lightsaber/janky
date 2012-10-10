@@ -34,7 +34,11 @@ module Janky
 
     def authorize_repo(repo)
       if team_id = (repo.github_team_id || github_team_id)
-        github_team_authenticate!(team_id)
+        if github_team_id && github_team_id != team_id
+          github_team_authenticate!(team_id, github_team_id)
+        else
+          github_team_authenticate!(team_id)
+        end
       end
     end
 
