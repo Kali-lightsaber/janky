@@ -108,12 +108,12 @@ module Janky
     get "/help" do
       content_type "text/plain"
 <<-EOS
-ci build janky
-ci build janky/fix-everything
-ci setup github/janky [name]
-ci toggle janky
+ci build \#{name}
+ci build \#{name}/\#{branch}
+ci setup \#{organization}/\#{repository} [name]
+ci toggle \#{name}
 ci rooms
-ci set room janky development
+ci set room \#{name} \#{room_name}
 EOS
     end
   end
