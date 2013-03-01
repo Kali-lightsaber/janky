@@ -107,7 +107,20 @@ After configuring the app (see below), create the database:
 
 [gist]: https://gist.github.com/1497335
 
-### Configuring
+Upgrading
+---------
+
+We **strongly recommend** backing up your Janky database before upgrading.
+
+The general process is to then upgrade the gem, and then run migrate.  Here is how
+you do that on a local box you have access to (this process will differ for Heroku):
+    
+    cd [PATH-TO-JANKY]
+    gem update janky
+    rake db:migrate
+
+Configuring
+-----------
 
 Janky is configured using environment variables. Use the `heroku config`
 command:
@@ -139,7 +152,7 @@ Optional database settings:
 * `JANKY_DATABASE_SOCKET`: Path to the database socket. Example:
   `/var/run/mysql5/mysqld.sock`.
 
-#### GitHub Enterprise
+### GitHub Enterprise
 
 Using Janky with [GitHub Enterprise][ghe] requires one extra setting:
 
@@ -155,7 +168,7 @@ https://github.com/blog/1227-commit-status-api
 To update pull requests with the build status generate an OAuth token
 like so:
 
-  curl -u username:password -d '{ "scopes": [ "repo:status" ], "note": "janky" }' https://api.github.com/authorizations
+    curl -u username:password -d '{ "scopes": [ "repo:status" ], "note": "janky" }' https://api.github.com/authorizations
 
 then set `JANKY_GITHUB_STATUS_TOKEN`.
 
@@ -264,7 +277,9 @@ Contributing
 ------------
 
 Fork the [Janky repository on GitHub](https://github.com/github/janky) and
-send a Pull Request.
+send a Pull Request.  Note that any changes to behavior without tests will
+be rejected.  If you are adding significant new features, please add both 
+tests and documentation.
 
 Copying
 -------

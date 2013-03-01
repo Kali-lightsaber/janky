@@ -8,6 +8,12 @@ Gem::Specification.new "janky", Janky::VERSION do |s|
   s.homepage = "https://github.com/github/janky"
   s.has_rdoc = false
 
+  s.post_install_message = <<-EOL
+If you are upgrading from Janky 0.9.13, you will want to add a JANKY_BRANCH parameter
+to your config/default.xml.erb. See
+https://github.com/github/janky/commit/0fc6214e3a75cc138aed46a2493980440e848aa3#commitcomment-1815400 for details.
+EOL
+
   # runtime
   s.add_dependency "rake", "~>0.9.2"
   s.add_dependency "sinatra", "~>1.3"
@@ -65,6 +71,7 @@ lib/janky/database/migrate/1317384650_add_build_indexes.rb
 lib/janky/database/migrate/1317384651_add_more_build_indexes.rb
 lib/janky/database/migrate/1317384652_change_commit_message_to_text.rb
 lib/janky/database/migrate/1317384653_add_build_pusher.rb
+lib/janky/database/migrate/1317384654_add_build_queued_at.rb
 lib/janky/database/schema.rb
 lib/janky/database/seed.dump.gz
 lib/janky/exception.rb
@@ -80,6 +87,7 @@ lib/janky/hubot.rb
 lib/janky/job_creator.rb
 lib/janky/notifier.rb
 lib/janky/notifier/chat_service.rb
+lib/janky/notifier/github_status.rb
 lib/janky/notifier/mock.rb
 lib/janky/notifier/multi.rb
 lib/janky/public/css/base.css
