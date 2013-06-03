@@ -90,7 +90,7 @@ Grab all the necessary files from [the gist][gist]:
 
     $ git clone git://gist.github.com/1497335 janky
 
-Then push up it to a new Heroku app:
+Then push it up to a new Heroku app:
 
     $ cd janky
     $ heroku create --stack cedar
@@ -193,6 +193,7 @@ Required settings:
 * `JANKY_CHAT_HIPCHAT_FROM`: name that messages will appear be sent from.
   Defaults to `CI`.
 * `JANKY_HUBOT_USER` should be XMPP/Jabber username in format xxxxx_xxxxxx rather than email
+* `JANKY_CHAT_DEFAULT_ROOM` should be the name of the room instead of the XMPP format, for example: `Engineers` instead of xxxx_xxxxxx.
 
 Installation:
 
@@ -215,6 +216,7 @@ a few extra settings:
 * `JANKY_AUTH_CLIENT_ID`: The client ID of the OAuth application.
 * `JANKY_AUTH_CLIENT_SECRET`: The client secret of the OAuth application.
 * `JANKY_AUTH_ORGANIZATION`: The organization name. Example: "github".
+* `JANKY_AUTH_TEAM_ID`: An optional team ID to give auth to. Example: "1234".
 
 ### Hubot
 
