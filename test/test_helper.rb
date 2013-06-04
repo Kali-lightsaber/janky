@@ -35,11 +35,11 @@ class Test::Unit::TestCase
     env
   end
 
-  def gh_commit(sha1 = "HEAD", message = ":octocat:")
+  def gh_commit(sha1 = "HEAD")
     Janky::GitHub::Commit.new(
       sha1,
       "https://github.com/github/github/commit/#{sha1}",
-      message,
+      ":octocat:",
       "sr",
       Time.now
     )
@@ -63,10 +63,10 @@ class Test::Unit::TestCase
   end
 
   def gh_post_receive(repo_name, branch = "master", commit = "HEAD",
-    pusher = "user", message = ":octocat:")
+    pusher = "user")
 
     repo    = Janky::Repository.find_by_name!(repo_name)
-    payload = gh_payload(repo, branch, pusher, [gh_commit(commit, message)])
+    payload = gh_payload(repo, branch, pusher, [gh_commit(commit)])
     digest  = OpenSSL::Digest::Digest.new("sha1")
     sig     = OpenSSL::HMAC.hexdigest(digest, Janky::GitHub.secret,
                 payload.to_json)
