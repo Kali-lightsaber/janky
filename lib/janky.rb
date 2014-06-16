@@ -109,7 +109,8 @@ module Janky
       :username  => database.user,
       :password  => database.password,
       :host      => database.host,
-      :port      => database.port
+      :port      => database.port,
+      :reconnect => true,
     }
     if socket = settings["JANKY_DATABASE_SOCKET"]
       connection[:socket] = socket
@@ -203,8 +204,9 @@ module Janky
     ChatService.setup(chat_name, chat_settings, chat_room)
 
     if token = settings["JANKY_GITHUB_STATUS_TOKEN"]
+      context = settings["JANKY_GITHUB_STATUS_CONTEXT"]
       Notifier.setup([
-        Notifier::GithubStatus.new(token, api_url),
+        Notifier::GithubStatus.new(token, api_url, context),
         Notifier::ChatService
       ])
     else
@@ -259,9 +261,6 @@ module Janky
   # Returns a memoized Rack application.
   def self.app
     @app ||= Rack::Builder.app {
-      # Exception reporting middleware.
-      use Janky::Exception::Middleware
-
       # GitHub Post-Receive requests.
       map "/_github" do
         run Janky::GitHub.receiver

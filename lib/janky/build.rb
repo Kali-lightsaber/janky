@@ -11,6 +11,10 @@ module Janky
       select(columns)
     end
 
+    scope :building, lambda {
+      where("started_at IS NOT NULL AND completed_at IS NULL")
+    }
+
     # Transition the Build to the started state.
     #
     # id  - the Fixnum ID used to find the build.
@@ -217,7 +221,7 @@ module Janky
     #
     # Returns the String room name.
     def room_name
-      if room_id && room_id > 0
+      if room_id && !room_id.empty?
         ChatService.room_name(room_id)
       end
     end

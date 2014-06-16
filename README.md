@@ -18,7 +18,7 @@ This is Janky, a continuous integration server built on top of
 [Jenkins]: http://jenkins-ci.org
 [w]: http://developer.github.com/v3/repos/hooks/
 
-Hubot Usage
+Hubot usage
 -----------
 
 Start by setting up a new Jenkins job and GitHub web hook for a
@@ -30,6 +30,10 @@ The `setup` command can safely be run over and over again. It won't do
 anything unless it needs to. It takes an optional name argument:
 
     hubot ci setup github/janky janky-ruby1.9.2
+
+It also takes an optional template name argument:
+
+    hubot ci setup github/janky janky-ruby1.9.2 ruby-build
 
 All branches are built automatically on push. Disable auto build with:
 
@@ -79,6 +83,9 @@ Janky requires access to a Jenkins server. Version **1.427** is
 recommended. Refer to the Jenkins [documentation][doc] for installation
 instructions and install the [Notification Plugin][np] version 1.4.
 
+Remember to set the Jenkins URL in `http://your-jenkins-server.com/configure`.
+Janky will still trigger builds but will not update the build status without this set.
+
 [doc]: https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins
 [np]: https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
 
@@ -103,7 +110,7 @@ After configuring the app (see below), create the database:
 
     $ heroku run rake db:migrate
 
-**NOTE:** Ruby version 1.9.3 is required to run Janky.
+**NOTE:** Ruby version 2.0.0+ is required to run Janky.
 
 [gist]: https://gist.github.com/1497335
 
@@ -114,7 +121,7 @@ We **strongly recommend** backing up your Janky database before upgrading.
 
 The general process is to then upgrade the gem, and then run migrate.  Here is how
 you do that on a local box you have access to (this process will differ for Heroku):
-    
+
     cd [PATH-TO-JANKY]
     gem update janky
     rake db:migrate
@@ -134,6 +141,7 @@ Required settings:
 * `JANKY_BUILDER_DEFAULT`: The Jenkins server URL **with** a trailing slash.
    Example: `http://jenkins.example.com/`. For basic auth, include the
    credentials in the URL: `http://user:pass@jenkins.example.com/`.
+   Using GitHub OAuth with Jenkins is not supported by Janky.
 * `JANKY_CONFIG_DIR`: Directory where build config templates are stored.
   Typically set to `/app/config` on Heroku.
 * `JANKY_HUBOT_USER`: Login used to protect the Hubot API.
@@ -166,13 +174,21 @@ Using Janky with [GitHub Enterprise][ghe] requires one extra setting:
 https://github.com/blog/1227-commit-status-api
 
 To update pull requests with the build status generate an OAuth token
-like so:
+via the GitHub API:
 
-    curl -u username:password -d '{ "scopes": [ "repo:status" ], "note": "janky" }' https://api.github.com/authorizations
+    curl -u username:password \
+      -d '{ "scopes": [ "repo:status" ], "note": "janky" }' \
+      https://api.github.com/authorizations
 
-then set `JANKY_GITHUB_STATUS_TOKEN`.
+then set `JANKY_GITHUB_STATUS_TOKEN`.  Optionally, you can also set
+`JANKY_GITHUB_STATUS_CONTEXT` to send a context to the GitHub API by
+default
 
-### Chat Notification
+`username` and `password` in the above example should be the same as the
+values provided for `JANKY_GITHUB_USER` and `JANKY_GITHUB_PASSWORD`
+respectively.
+
+### Chat notifications
 
 #### Campfire
 Janky notifies [Campfire][] chat rooms by default. Required settings:
@@ -192,17 +208,29 @@ Required settings:
   admin token, not a notification token.)
 * `JANKY_CHAT_HIPCHAT_FROM`: name that messages will appear be sent from.
   Defaults to `CI`.
-* `JANKY_HUBOT_USER` should be XMPP/Jabber username in format xxxxx_xxxxxx rather than email
-* `JANKY_CHAT_DEFAULT_ROOM` should be the name of the room instead of the XMPP format, for example: `Engineers` instead of xxxx_xxxxxx.
+* `JANKY_HUBOT_USER` should be XMPP/Jabber username in format xxxxx_xxxxxx
+  rather than email
+* `JANKY_CHAT_DEFAULT_ROOM` should be the name of the room instead of the
+  XMPP format, for example: `Engineers` instead of xxxx_xxxxxx.
 
 Installation:
 
-* Add `require "janky/chat_service/hipchat"` to the `config/environment.rb` file
-  **before** the `Janky.setup(ENV)` line.
+* Add `require "janky/chat_service/hipchat"` to the `config/environment.rb`
+  file **before** the `Janky.setup(ENV)` line.
 * `echo 'gem "hipchat", "~>0.4"' >> Gemfile`
 * `bundle`
 * `git commit -am "install hipchat"`
 
+#### Hubot
+
+Sends notifications to Hubot via [janky script](http://git.io/hubot-janky).
+
+Required settings:
+
+* `JANKY_CHAT_HUBOT_URL`: URL to your Hubot instance.
+* `JANKY_CHAT_HUBOT_ROOMS`: List of rooms which can be set via `ci set room`.
+  * For IRC: Comma-separated list of channels `"#room, #another-room"`
+  * For Campfire/HipChat: List with room id and name `"34343:room, 23223:another-room"`
 
 ### Authentication
 
@@ -225,7 +253,7 @@ then set the `HUBOT_JANKY_URL` environment variable. Example:
 `http://user:password@janky.example.com/_hubot/`, with user and password
 replaced by `JANKY_HUBOT_USER` and `JANKY_HUBOT_PASSWORD` respectively.
 
-### Custom Build Configuration
+### Custom build configuration
 
 The default build command should suffice for most Ruby applications:
 
@@ -236,8 +264,10 @@ For more control you can add a `script/cibuild` at the root of your
 repository for Jenkins to execute instead.
 
 For total control, whole Jenkins' `config.xml` files can be associated
-with Janky builds. Given a build called `windows`, Janky will try
-`config/jobs/windows.xml.erb` before falling back to the default
+with Janky builds. Given a build called `windows` and a template name
+of `psake`, Janky will try `config/jobs/psake.xml.erb` to use a template,
+`config/jobs/windows.xml.erb` to try the job name if the template does
+not exit,  before finally falling back to the default
 configuration, `config/jobs/default.xml.erb`. After updating or adding
 a custom config, run `hubot ci setup` again to update the Jenkins
 server.
@@ -280,11 +310,11 @@ Contributing
 
 Fork the [Janky repository on GitHub](https://github.com/github/janky) and
 send a Pull Request.  Note that any changes to behavior without tests will
-be rejected.  If you are adding significant new features, please add both 
+be rejected.  If you are adding significant new features, please add both
 tests and documentation.
 
 Copying
 -------
 
-Copyright © 2011-2012, GitHub, Inc. See the `COPYING` file for license
+Copyright © 2011-2013, GitHub, Inc. See the `COPYING` file for license
 rights and limitations (MIT).
