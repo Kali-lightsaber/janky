@@ -181,7 +181,6 @@ module Janky
     get "/help" do
       content_type "text/plain"
 <<-EOS
-<<<<<<< HEAD
 ci build \#{name}
 ci build \#{name}/\#{branch}
 ci stop \#{name}/\#{id}
