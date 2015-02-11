@@ -2,15 +2,15 @@ module Janky
   module Notifier
     class ChatService
       def self.completed(build)
-        status = build.green? ? "was successful" : "failed"
+        emoji_status = build.green? ? ":white_check_mark:" : ":no_entry:"
         color = build.green? ? "green" : "red"
 
-        message = "Build #%s (%s) of %s/%s %s (%ss) %s" % [
-          build.number,
-          build.sha1,
+        message = "%s %s/%s [#%s - %s] (%ss) %s" % [
+          emoji_status,
           build.repo_name,
           build.branch_name,
-          status,
+          build.number,
+          build.sha1,
           build.duration,
           build.compare
         ]
