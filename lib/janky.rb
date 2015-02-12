@@ -44,7 +44,6 @@ require "janky/chat_service/mock"
 require "janky/exception"
 require "janky/notifier"
 require "janky/notifier/chat_service"
-require "janky/notifier/failure_service"
 require "janky/notifier/mock"
 require "janky/notifier/multi"
 require "janky/notifier/github_status"
@@ -208,8 +207,7 @@ module Janky
       context = settings["JANKY_GITHUB_STATUS_CONTEXT"]
       Notifier.setup([
         Notifier::GithubStatus.new(token, api_url, context),
-        Notifier::ChatService,
-        Notifier::FailureService
+        Notifier::ChatService
       ])
     else
       Notifier.setup(Notifier::ChatService)

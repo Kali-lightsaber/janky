@@ -57,7 +57,7 @@ module Janky
     # user    - The login of the GitHub user who pushed.
     # compare - optional String GitHub Compare View URL. Defaults to the
     #           commit last build, if any.
-    # room_id - optional String room ID. Defaults to the room set on
+    # room_id - optional Fixnum Campfire room ID. Defaults to the room set on
     #           the repository.
     #
     # Returns the newly created Janky::Build.
@@ -66,8 +66,7 @@ module Janky
         compare = build.compare
       end
 
-      room_id = room_id.to_s
-      if room_id.empty? || room_id == "0"
+      if room_id.nil? || room_id.zero?
         room_id = repository.room_id
       end
 

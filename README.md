@@ -48,7 +48,7 @@ Of a specific branch:
 
     hubot ci build janky/libgit2
 
-Different builds aren't relevant to the same chat room and so Janky
+Different builds aren't relevant to the same Campfire room and so Janky
 lets you choose where notifications are sent to. First get a list of
 available rooms:
 
@@ -79,7 +79,7 @@ Installing
 
 ### Jenkins
 
-Janky requires access to a Jenkins server. Version **1.580** is
+Janky requires access to a Jenkins server. Version **1.427** is
 recommended. Refer to the Jenkins [documentation][doc] for installation
 instructions and install the [Notification Plugin][np] version 1.4.
 
@@ -221,25 +221,6 @@ Installation:
 * `bundle`
 * `git commit -am "install hipchat"`
 
-#### Slack
-
-Required settings:
-
-* `JANKY_CHAT=slack`
-* `JANKY_CHAT_SLACK_TEAM`: slack team name
-* `JANKY_CHAT_SLACK_TOKEN`: authentication token for the user sending build notifications.
-* `JANKY_CHAT_SLACK_USERNAME`: name that messages will appear be sent from.
-  Defaults to `CI`.
-* `JANKY_CHAT_SLACK_ICON_URL`: URL to an image to use as the icon for this message.
-
-Installation:
-
-* Add `require "janky/chat_service/slack"` to the `config/environment.rb`
-  file **before** the `Janky.setup(ENV)` line.
-* `echo 'gem "slack.rb"' >> Gemfile`
-* `bundle`
-* `git commit -am "install slack"`
-
 #### Hubot
 
 Sends notifications to Hubot via [janky script](http://git.io/hubot-janky).
@@ -332,13 +313,8 @@ send a Pull Request.  Note that any changes to behavior without tests will
 be rejected.  If you are adding significant new features, please add both
 tests and documentation.
 
-Maintainers
------------
-
-* [@mattr-](https://github.com/mattr-)
-
 Copying
 -------
 
-Copyright © 2011-2014, GitHub, Inc. See the `COPYING` file for license
+Copyright © 2011-2013, GitHub, Inc. See the `COPYING` file for license
 rights and limitations (MIT).
