@@ -16,7 +16,7 @@ https://github.com/github/janky/commit/0fc6214e3a75cc138aed46a2493980440e848aa3#
 EOL
 
   # runtime
-  s.add_dependency "rake", "~>0.9.2"
+  s.add_dependency "rake", "~>10.0"
   s.add_dependency "sinatra", "~>1.3"
   s.add_dependency "sinatra_auth_github", "~>1.0.0"
   s.add_dependency "mustache", "~>0.11"
@@ -57,6 +57,7 @@ lib/janky/builder/runner.rb
 lib/janky/chat_service.rb
 lib/janky/chat_service/campfire.rb
 lib/janky/chat_service/hipchat.rb
+lib/janky/chat_service/slack.rb
 lib/janky/chat_service/mock.rb
 lib/janky/commit.rb
 lib/janky/database/migrate/1312115512_init.rb
@@ -73,6 +74,9 @@ lib/janky/database/migrate/1317384651_add_more_build_indexes.rb
 lib/janky/database/migrate/1317384652_change_commit_message_to_text.rb
 lib/janky/database/migrate/1317384653_add_build_pusher.rb
 lib/janky/database/migrate/1317384654_add_build_queued_at.rb
+lib/janky/database/migrate/1317384655_add_template.rb
+lib/janky/database/migrate/1398262033_add_context.rb
+lib/janky/database/migrate/1400144784_change_room_id_to_string.rb
 lib/janky/database/schema.rb
 lib/janky/database/seed.dump.gz
 lib/janky/exception.rb
@@ -88,6 +92,7 @@ lib/janky/hubot.rb
 lib/janky/job_creator.rb
 lib/janky/notifier.rb
 lib/janky/notifier/chat_service.rb
+lib/janky/notifier/failure_service.rb
 lib/janky/notifier/github_status.rb
 lib/janky/notifier/mock.rb
 lib/janky/notifier/multi.rb
